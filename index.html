@@ -129,137 +129,305 @@ Fais tout ça maintenant, je veux voir le lien du repo GitHub à la fin.</code><
                 <p class="text-gray-600 mb-4">
                     Utilise l'extension <strong>Resource Saver</strong> (Chrome/Firefox) pour télécharger le HTML et CSS du site actuel. Ensuite, utilise ce prompt exhaustif :
                 </p>
-                <div class="code-block p-5 relative max-h-[600px] overflow-y-auto">
+                <div class="code-block p-5 relative max-h-[700px] overflow-y-auto">
                     <button class="copy-btn absolute top-4 right-4 px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg font-medium sticky" onclick="copyCode(this)">Copier</button>
                     <pre><code class="font-mono whitespace-pre-wrap">J'ai téléchargé le HTML/CSS du site avec Resource Saver.
 Les fichiers sont dans [CHEMIN_DOSSIER].
 
-# EXTRACTION EXHAUSTIVE DE CONTENU & STRUCTURE
+# PROMPT : Extraction de Contenu &amp; Structure pour Audit de Site
 
 ## OBJECTIF
-Extraire de manière exhaustive et structurée tout le contenu, la hiérarchie informationnelle et les éléments fonctionnels pour réaliser un audit complet (SEO, accessibilité, UX, architecture).
 
-## TÂCHE - Analyser et documenter :
+Extraire de manière **exhaustive et structurée** tout le contenu, la hiérarchie informationnelle et les éléments fonctionnels d'un site web à partir des fichiers HTML fournis, afin de réaliser un **audit complet** (SEO, accessibilité, UX, architecture de l'information).
 
-### 1. MÉTADONNÉES (Head)
+## ENTRÉE ATTENDUE
 
-**SEO Essentiels :**
-- &lt;title&gt; : contenu exact
-- &lt;meta name="description"&gt;
-- &lt;meta name="keywords"&gt;
-- &lt;meta name="robots"&gt;
-- &lt;link rel="canonical"&gt;
+Fichiers HTML (code source, liens, ou contenu collé) — une ou plusieurs pages du site.
 
-**Open Graph :**
-- og:title, og:description, og:image, og:url, og:type, og:site_name
+## TÂCHE
 
-**Twitter Cards :**
-- twitter:card, twitter:title, twitter:description, twitter:image
+Analyser le code fourni pour extraire et documenter de manière **exhaustive** :
 
-**Autres :**
-- author, viewport, charset
-- Favicons, données structurées (JSON-LD)
+---
 
-### 2. HIÉRARCHIE DES TITRES
+### 1. Métadonnées (Head)
 
-- Tous les h1 à h6 avec niveau, contenu, position, ordre
-- Nombre de h1 (idéalement 1)
+#### 1.1 SEO Essentiels
+- `&lt;title&gt;` : contenu exact
+- `&lt;meta name="description"&gt;` : contenu
+- `&lt;meta name="keywords"&gt;` : si présent
+- `&lt;meta name="robots"&gt;` : directives
+- `&lt;link rel="canonical"&gt;` : URL canonique
+
+#### 1.2 Open Graph (Réseaux sociaux)
+- `og:title`
+- `og:description`
+- `og:image`
+- `og:url`
+- `og:type`
+- `og:site_name`
+
+#### 1.3 Twitter Cards
+- `twitter:card`
+- `twitter:title`
+- `twitter:description`
+- `twitter:image`
+- `twitter:site`
+
+#### 1.4 Autres métadonnées
+- `&lt;meta name="author"&gt;`
+- `&lt;meta name="viewport"&gt;`
+- `&lt;meta charset&gt;`
+- `&lt;meta http-equiv&gt;`
+- Favicons et icônes (`&lt;link rel="icon"&gt;`, `apple-touch-icon`)
+- Données structurées (JSON-LD, microdata)
+
+---
+
+### 2. Hiérarchie des Titres
+
+#### 2.1 Structure complète
+- Tous les `&lt;h1&gt;` à `&lt;h6&gt;` avec :
+  - Niveau (h1, h2, etc.)
+  - Contenu textuel exact
+  - Position dans la page (section parente)
+  - Ordre d'apparition
+
+#### 2.2 Analyse de la hiérarchie
+- Nombre de h1 (idéalement 1 seul)
 - Sauts de niveaux (h1 → h3 sans h2)
-- Arborescence visuelle indentée
+- Cohérence de la structure
+- Arborescence visuelle (indentée)
 
-### 3. LIENS & NAVIGATION
+---
 
-**Liens internes :**
-- URL, texte d'ancre, attributs (target, rel, title)
-- Contexte (nav, footer, body)
-- Liens cassés (href="#", href="", javascript:void)
+### 3. Liens &amp; Navigation
 
-**Liens externes :**
-- URL complète, texte d'ancre
-- Attributs rel (nofollow, noopener, noreferrer)
+#### 3.1 Liens internes
+- URL de destination
+- Texte d'ancre exact
+- Attributs (`target`, `rel`, `title`)
+- Contexte (dans quel élément : nav, footer, body, etc.)
+- Liens cassés potentiels (href="#", href="", javascript:void)
 
-**Navigation :**
-- Menu principal, fil d'Ariane, menu footer
-- Pagination, skip-to-content
+#### 3.2 Liens externes
+- URL complète
+- Texte d'ancre
+- Attributs `rel` (nofollow, noopener, noreferrer, sponsored, ugc)
+- `target="_blank"` : présence ou non
 
-### 4. CONTENU TEXTUEL
+#### 3.3 Ancres internes
+- Liens avec `href="#id"`
+- IDs correspondants dans la page
+- Ancres orphelines (liens vers IDs inexistants)
 
-- Tous les paragraphes avec longueur et section parente
-- Listes (ul/ol) : type, items, imbrication
-- Citations (blockquote, q, cite)
-- Texte enrichi (strong, em, mark, abbr, code, time)
+#### 3.4 Navigation structurelle
+- Menu principal (`&lt;nav&gt;`)
+- Fil d'Ariane (breadcrumbs)
+- Menu footer
+- Pagination
+- Liens skip-to-content
 
-### 5. MÉDIAS
+---
 
-**Images :**
-- src, alt (CRITIQUE), title, dimensions
-- loading, srcset/sizes, figure/figcaption
+### 4. Contenu Textuel
 
-**Vidéos/Audio :**
-- Sources, attributs, iframes YouTube/Vimeo
-- Transcriptions
+#### 4.1 Paragraphes
+- Tous les `&lt;p&gt;` avec contenu
+- Longueur approximative (mots)
+- Section parente
 
-**Autres :**
-- SVG (avec title/desc), canvas, iframes
+#### 4.2 Listes
+- `&lt;ul&gt;` / `&lt;ol&gt;` : type et nombre d'items
+- Contenu de chaque `&lt;li&gt;`
+- Listes imbriquées
 
-### 6. FORMULAIRES
+#### 4.3 Citations
+- `&lt;blockquote&gt;` : contenu et source (`cite`)
+- `&lt;q&gt;` : citations inline
+- `&lt;cite&gt;` : références
 
-- Structure : form action/method, fieldsets
-- Champs : type, name, id, placeholder, label, required, aria-*
-- Selects, textareas, buttons
+#### 4.4 Texte enrichi
+- `&lt;strong&gt;` / `&lt;b&gt;` : texte important
+- `&lt;em&gt;` / `&lt;i&gt;` : texte emphase
+- `&lt;mark&gt;` : texte surligné
+- `&lt;abbr&gt;` : abréviations (avec `title`)
+- `&lt;code&gt;`, `&lt;pre&gt;` : blocs de code
+- `&lt;time&gt;` : dates (avec `datetime`)
+
+---
+
+### 5. Médias
+
+#### 5.1 Images
+- `src` : URL source
+- `alt` : texte alternatif (CRITIQUE pour accessibilité)
+- `title` : si présent
+- `width` / `height` : dimensions
+- `loading` : lazy/eager
+- `srcset` / `sizes` : images responsives
+- `&lt;figure&gt;` / `&lt;figcaption&gt;` : légendes
+
+#### 5.2 Vidéos
+- `&lt;video&gt;` : sources, poster, attributs (autoplay, controls, loop, muted)
+- Iframes YouTube/Vimeo : URLs
+- `&lt;track&gt;` : sous-titres
+
+#### 5.3 Audio
+- `&lt;audio&gt;` : sources, attributs
+- Transcriptions associées
+
+#### 5.4 Autres médias
+- `&lt;iframe&gt;` : sources et titres
+- `&lt;embed&gt;`, `&lt;object&gt;`
+- `&lt;svg&gt;` : présence et `&lt;title&gt;` / `&lt;desc&gt;` pour accessibilité
+- `&lt;canvas&gt;` : fallback content
+
+---
+
+### 6. Formulaires
+
+#### 6.1 Structure
+- `&lt;form&gt;` : action, method, id, name
+- Fieldsets et legends
+
+#### 6.2 Champs
+- Tous les inputs avec :
+  - `type` (text, email, password, tel, number, date, etc.)
+  - `name` et `id`
+  - `placeholder`
+  - `label` associé (for="id")
+  - `required`, `disabled`, `readonly`
+  - `aria-*` attributs
+  - `autocomplete`
+
+#### 6.3 Autres éléments
+- `&lt;select&gt;` : options et valeurs
+- `&lt;textarea&gt;` : placeholder, dimensions
+- `&lt;button&gt;` : type, contenu
 - Messages d'erreur/validation
 
-### 7. TABLEAUX
+---
 
-- caption, thead/tbody/tfoot
-- th avec scope, td
-- colspan/rowspan
+### 7. Tableaux
 
-### 8. ACCESSIBILITÉ (ARIA)
+- `&lt;caption&gt;` : titre du tableau
+- `&lt;thead&gt;` / `&lt;tbody&gt;` / `&lt;tfoot&gt;` : structure
+- `&lt;th&gt;` : en-têtes avec `scope` (row/col)
+- `&lt;td&gt;` : cellules de données
+- Attributs `colspan` / `rowspan`
+- Nombre de lignes/colonnes
 
-**Landmarks :**
-- header, main, footer, aside, nav, section, article
-- Rôles ARIA équivalents
+---
 
-**Attributs ARIA :**
-- aria-label, aria-labelledby, aria-describedby
-- aria-hidden, aria-live, aria-expanded, aria-controls, role
+### 8. Accessibilité (ARIA &amp; Sémantique)
 
-### 9. DONNÉES STRUCTURÉES
+#### 8.1 Landmarks
+- `&lt;header&gt;`, `&lt;main&gt;`, `&lt;footer&gt;`, `&lt;aside&gt;`, `&lt;nav&gt;`, `&lt;section&gt;`, `&lt;article&gt;`
+- Rôles ARIA équivalents (`role="banner"`, `role="main"`, etc.)
 
-- JSON-LD : type, propriétés, validité
-- Microdata : itemscope, itemtype, itemprop
+#### 8.2 Attributs ARIA
+- `aria-label`
+- `aria-labelledby`
+- `aria-describedby`
+- `aria-hidden`
+- `aria-live`
+- `aria-expanded`
+- `aria-controls`
+- `aria-current`
+- `role` (tous)
 
-### 10. SCRIPTS & RESSOURCES
+#### 8.3 Accessibilité des interactions
+- `tabindex` : valeurs et ordre
+- Focus management
+- Skip links
 
-- Scripts chargés
-- Tracking (GA, GTM, pixels)
-- Widgets tiers, polices externes
+---
+
+### 9. Données Structurées
+
+#### 9.1 JSON-LD
+- Type de schéma (@type)
+- Propriétés complètes
+- Validité de la structure
+
+#### 9.2 Microdata
+- `itemscope`, `itemtype`, `itemprop`
+- Données extraites
+
+#### 9.3 RDFa
+- Attributs et valeurs
+
+---
+
+### 10. Éléments Interactifs &amp; Dynamiques
+
+- `&lt;details&gt;` / `&lt;summary&gt;` : accordéons natifs
+- `&lt;dialog&gt;` : modales
+- `data-*` attributs : fonctionnalités JS
+- Éléments avec événements (onclick, etc.)
+- IDs utilisés pour JS
+
+---
+
+### 11. Scripts &amp; Ressources Externes
+
+- Scripts chargés (`&lt;script src&gt;`)
+- Scripts inline (résumé du rôle)
+- Tracking (Google Analytics, GTM, pixels)
+- Widgets tiers (chat, réseaux sociaux)
+- Polices externes (Google Fonts, etc.)
+
+---
+
+### 12. Internationalisation
+
+- Attribut `lang` (html et éléments)
+- `hreflang` : versions linguistiques
+- Direction du texte (`dir`)
+- Contenu multilingue
 
 ---
 
 ## FORMAT DE SORTIE
 
-1. **Résumé exécutif** : stats clés (liens, titres, images sans alt)
-2. **Inventaire complet** par catégorie
-3. **Tableau des problèmes** (accessibilité, SEO, liens cassés)
-4. **Arborescence visuelle** de la hiérarchie
-5. **Export** en JSON dans /scraping/
+Structurer l'extraction sous forme de rapport avec :
 
-## CHECKLIST PROBLÈMES À DÉTECTER
+1. **Résumé exécutif** : statistiques clés (nombre de liens, titres, images sans alt, etc.)
+2. **Inventaire complet** par catégorie
+3. **Tableau des problèmes détectés** (accessibilité, SEO, liens cassés)
+4. **Arborescence visuelle** de la hiérarchie de contenu
+5. **Export tabulaire** pour chaque catégorie (liens, images, titres)
+
+---
+
+## CONTRAINTES
+
+- **NE PAS** extraire les styles CSS (couleurs, fonts, espacements)
+- **NE PAS** analyser les aspects visuels
+- **SE CONCENTRER** sur le contenu brut, la structure sémantique et les attributs fonctionnels
+- **SIGNALER** les problèmes potentiels (accessibilité, SEO, bonnes pratiques)
+- **ÊTRE EXHAUSTIF** : ne rien omettre du contenu présent
+
+---
+
+## BONUS : Checklist de Problèmes à Détecter
 
 | Catégorie | Problème |
 |-----------|----------|
-| SEO | Title manquant ou >60 car. |
-| SEO | Meta description manquante ou >160 car. |
+| SEO | Title manquant ou trop long (&gt;60 car.) |
+| SEO | Meta description manquante ou trop longue (&gt;160 car.) |
 | SEO | Plusieurs h1 |
-| SEO | Hiérarchie titres incohérente |
+| SEO | Hiérarchie de titres incohérente |
 | Accessibilité | Images sans alt |
 | Accessibilité | Labels manquants sur inputs |
 | Accessibilité | Liens sans texte descriptif |
+| Accessibilité | Contraste insuffisant (si détectable) |
+| Accessibilité | Landmarks manquants |
 | Liens | Liens cassés (href vide, #, javascript:) |
 | Liens | Liens externes sans rel="noopener" |
 | Performance | Images sans dimensions |
+| Performance | Scripts bloquants |
 
 ---
 
