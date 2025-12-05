@@ -124,28 +124,147 @@ Fais tout ça maintenant, je veux voir le lien du repo GitHub à la fin.</code><
             </div>
 
             <!-- 1.1 Scraping avec Resource Saver -->
-            <div class="step-card bg-white rounded-xl p-6 mb-6 border border-gray-100">
-                <h3 class="font-semibold text-lg mb-3">1.1 Récupérer le HTML/CSS du site (avec Resource Saver)</h3>
+            <div class="step-card bg-white rounded-xl p-6 mb-6 border border-gray-100 border-l-4 border-l-indigo-500">
+                <h3 class="font-semibold text-lg mb-3">1.1 Extraction exhaustive du contenu (avec Resource Saver)</h3>
                 <p class="text-gray-600 mb-4">
-                    Utilise l'extension <strong>Resource Saver</strong> (Chrome/Firefox) pour télécharger le HTML et CSS du site actuel. Ensuite :
+                    Utilise l'extension <strong>Resource Saver</strong> (Chrome/Firefox) pour télécharger le HTML et CSS du site actuel. Ensuite, utilise ce prompt exhaustif :
                 </p>
-                <div class="code-block p-5 relative">
-                    <button class="copy-btn absolute top-4 right-4 px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg font-medium" onclick="copyCode(this)">Copier</button>
+                <div class="code-block p-5 relative max-h-[600px] overflow-y-auto">
+                    <button class="copy-btn absolute top-4 right-4 px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg font-medium sticky" onclick="copyCode(this)">Copier</button>
                     <pre><code class="font-mono whitespace-pre-wrap">J'ai téléchargé le HTML/CSS du site avec Resource Saver.
 Les fichiers sont dans [CHEMIN_DOSSIER].
 
-Analyse ces fichiers et extrais :
-- Tout le contenu texte (titres, paragraphes, listes)
-- La structure des pages
-- Les URLs des images importantes
-- Les coordonnées de contact
-- Les témoignages clients si présents
-- La structure du menu
+# EXTRACTION EXHAUSTIVE DE CONTENU & STRUCTURE
 
-Sauvegarde tout ça dans un dossier /scraping/ en JSON et Markdown.
+## OBJECTIF
+Extraire de manière exhaustive et structurée tout le contenu, la hiérarchie informationnelle et les éléments fonctionnels pour réaliser un audit complet (SEO, accessibilité, UX, architecture).
 
-EN PLUS : télécharge toutes les images du site dans /scraping/images/
-On les améliorera plus tard avec l'IA (Nano Banana Pro).</code></pre>
+## TÂCHE - Analyser et documenter :
+
+### 1. MÉTADONNÉES (Head)
+
+**SEO Essentiels :**
+- &lt;title&gt; : contenu exact
+- &lt;meta name="description"&gt;
+- &lt;meta name="keywords"&gt;
+- &lt;meta name="robots"&gt;
+- &lt;link rel="canonical"&gt;
+
+**Open Graph :**
+- og:title, og:description, og:image, og:url, og:type, og:site_name
+
+**Twitter Cards :**
+- twitter:card, twitter:title, twitter:description, twitter:image
+
+**Autres :**
+- author, viewport, charset
+- Favicons, données structurées (JSON-LD)
+
+### 2. HIÉRARCHIE DES TITRES
+
+- Tous les h1 à h6 avec niveau, contenu, position, ordre
+- Nombre de h1 (idéalement 1)
+- Sauts de niveaux (h1 → h3 sans h2)
+- Arborescence visuelle indentée
+
+### 3. LIENS & NAVIGATION
+
+**Liens internes :**
+- URL, texte d'ancre, attributs (target, rel, title)
+- Contexte (nav, footer, body)
+- Liens cassés (href="#", href="", javascript:void)
+
+**Liens externes :**
+- URL complète, texte d'ancre
+- Attributs rel (nofollow, noopener, noreferrer)
+
+**Navigation :**
+- Menu principal, fil d'Ariane, menu footer
+- Pagination, skip-to-content
+
+### 4. CONTENU TEXTUEL
+
+- Tous les paragraphes avec longueur et section parente
+- Listes (ul/ol) : type, items, imbrication
+- Citations (blockquote, q, cite)
+- Texte enrichi (strong, em, mark, abbr, code, time)
+
+### 5. MÉDIAS
+
+**Images :**
+- src, alt (CRITIQUE), title, dimensions
+- loading, srcset/sizes, figure/figcaption
+
+**Vidéos/Audio :**
+- Sources, attributs, iframes YouTube/Vimeo
+- Transcriptions
+
+**Autres :**
+- SVG (avec title/desc), canvas, iframes
+
+### 6. FORMULAIRES
+
+- Structure : form action/method, fieldsets
+- Champs : type, name, id, placeholder, label, required, aria-*
+- Selects, textareas, buttons
+- Messages d'erreur/validation
+
+### 7. TABLEAUX
+
+- caption, thead/tbody/tfoot
+- th avec scope, td
+- colspan/rowspan
+
+### 8. ACCESSIBILITÉ (ARIA)
+
+**Landmarks :**
+- header, main, footer, aside, nav, section, article
+- Rôles ARIA équivalents
+
+**Attributs ARIA :**
+- aria-label, aria-labelledby, aria-describedby
+- aria-hidden, aria-live, aria-expanded, aria-controls, role
+
+### 9. DONNÉES STRUCTURÉES
+
+- JSON-LD : type, propriétés, validité
+- Microdata : itemscope, itemtype, itemprop
+
+### 10. SCRIPTS & RESSOURCES
+
+- Scripts chargés
+- Tracking (GA, GTM, pixels)
+- Widgets tiers, polices externes
+
+---
+
+## FORMAT DE SORTIE
+
+1. **Résumé exécutif** : stats clés (liens, titres, images sans alt)
+2. **Inventaire complet** par catégorie
+3. **Tableau des problèmes** (accessibilité, SEO, liens cassés)
+4. **Arborescence visuelle** de la hiérarchie
+5. **Export** en JSON dans /scraping/
+
+## CHECKLIST PROBLÈMES À DÉTECTER
+
+| Catégorie | Problème |
+|-----------|----------|
+| SEO | Title manquant ou >60 car. |
+| SEO | Meta description manquante ou >160 car. |
+| SEO | Plusieurs h1 |
+| SEO | Hiérarchie titres incohérente |
+| Accessibilité | Images sans alt |
+| Accessibilité | Labels manquants sur inputs |
+| Accessibilité | Liens sans texte descriptif |
+| Liens | Liens cassés (href vide, #, javascript:) |
+| Liens | Liens externes sans rel="noopener" |
+| Performance | Images sans dimensions |
+
+---
+
+EN PLUS : télécharge toutes les images dans /scraping/images/
+On les améliorera avec l'IA (Nano Banana Pro).</code></pre>
                 </div>
             </div>
 
