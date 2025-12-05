@@ -562,41 +562,161 @@ Analyse ce site et dis-moi :
             <div class="step-card bg-white rounded-xl p-6 mb-6 border border-gray-100 border-l-4 border-l-purple-500">
                 <h3 class="font-semibold text-lg mb-3">2.2 Extraire le Design System complet</h3>
                 <p class="text-gray-600 mb-4">LE prompt pour extraire tous les styles du site d'inspiration.</p>
-                <div class="code-block p-5 relative max-h-[500px] overflow-y-auto">
+                <div class="code-block p-5 relative max-h-[700px] overflow-y-auto">
                     <button class="copy-btn absolute top-4 right-4 px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg font-medium sticky" onclick="copyCode(this)">Copier</button>
-                    <pre><code class="font-mono whitespace-pre-wrap">Extrais le design system complet du site d'inspiration.
+                    <pre><code class="font-mono whitespace-pre-wrap"># PROMPT : Extraction de Design System depuis HTML/CSS
 
-À partir des fichiers HTML/CSS, récupère :
+## OBJECTIF
 
-COULEURS :
-- Couleurs primaires, secondaires, accent (codes hex)
-- Couleurs de texte
-- Couleurs de fond
-- Couleurs des boutons, liens, états
+Extraire un **système de design exhaustif, généralisé et réutilisable** à partir des fichiers HTML et CSS fournis, en isolant exclusivement les **règles stylistiques et structurelles**, afin de servir de référence pour construire des interfaces cohérentes.
 
-TYPOGRAPHIE :
-- Polices utilisées (+ lien Google Fonts si possible)
-- Tailles pour h1, h2, h3, paragraphe, small
-- Font-weight utilisés
-- Line-height
+## ENTRÉE ATTENDUE
 
-ESPACEMENTS :
-- Pattern de margins/paddings (multiples de 4px ? 8px ?)
-- Gaps utilisés
+Fichiers HTML et/ou CSS (code source, liens, ou contenu collé).
 
-COMPOSANTS :
-- Style des boutons (padding, border-radius, hover)
-- Style des cartes (shadow, border-radius, padding)
-- Style des inputs
-- Style de la navbar
-- Animations/transitions utilisées
+## TÂCHE
 
-LAYOUT :
-- Largeur max des conteneurs
-- Système de grille
+Analyser le code fourni pour extraire et documenter de manière **exhaustive** :
+
+---
+
+### 1. Palette de couleurs
+- Couleurs primaires, secondaires, accent
+- Couleurs de fond (backgrounds)
+- Couleurs de texte (primary, secondary, muted, disabled)
+- Couleurs d'état (success, warning, error, info)
+- Couleurs de bordure
+- Gradients éventuels
+- Variables CSS custom properties (`--color-*`)
+
+---
+
+### 2. Typographie
+- Familles de polices (font-family) et fallbacks
+- Échelle typographique (font-size : h1→h6, body, caption, etc.)
+- Graisses (font-weight)
+- Hauteurs de ligne (line-height)
+- Espacement des lettres (letter-spacing)
+- Styles de texte (italique, uppercase, etc.)
+
+---
+
+### 3. Espacement (Spacing)
+- Échelle de marges (margin)
+- Échelle de paddings
+- Gaps (flexbox/grid)
+- Variables ou patterns récurrents (multiples de 4px, 8px, etc.)
+
+---
+
+### 4. Mise en page (Layout)
+- Système de grille (colonnes, gutters)
+- Conteneurs (max-width, padding latéral)
 - Breakpoints responsive
+- Règles Flexbox/Grid utilisées
+- Patterns de disposition (stack, cluster, sidebar, etc.)
 
-Génère-moi un fichier DESIGN_SYSTEM.md + une config Tailwind prête à utiliser.</code></pre>
+---
+
+### 5. Composants UI
+- **Boutons** : variantes, tailles, états (hover, active, disabled, focus)
+- **Champs de formulaire** : inputs, selects, textareas, checkboxes, radios
+- **Cartes** : structure, padding, ombres
+- **Modales/Dialogs**
+- **Navigation** : navbar, sidebar, tabs, breadcrumbs
+- **Tableaux** : styles de lignes, headers, bordures
+- **Badges, tags, chips**
+- **Alertes/Notifications**
+- **Tooltips, popovers**
+
+---
+
+### 6. Effets visuels statiques
+- Border-radius (échelle : sm, md, lg, full)
+- Box-shadows (échelle : sm, md, lg, xl)
+- Opacités
+- Filtres (blur, backdrop-filter)
+- Outlines
+- Text-shadows
+
+---
+
+### 7. Animations &amp; Transitions
+
+#### 7.1 Transitions
+- Propriétés animées (transform, opacity, color, background, etc.)
+- Durées (transition-duration) : valeurs utilisées
+- Fonctions de timing (transition-timing-function) : ease, ease-in-out, cubic-bezier, etc.
+- Délais (transition-delay)
+- Patterns récurrents par composant
+
+#### 7.2 Keyframes Animations
+- Noms des animations (@keyframes)
+- Étapes clés (0%, 50%, 100%, from, to)
+- Propriétés animées à chaque étape
+- Durée (animation-duration)
+- Fonction de timing (animation-timing-function)
+- Délai (animation-delay)
+- Nombre d'itérations (animation-iteration-count)
+- Direction (animation-direction : normal, reverse, alternate)
+- Mode de remplissage (animation-fill-mode : forwards, backwards, both)
+- État de lecture (animation-play-state)
+
+#### 7.3 Types d'animations identifiées
+- **Entrées** : fade-in, slide-in, scale-in, etc.
+- **Sorties** : fade-out, slide-out, scale-out, etc.
+- **Attention/Feedback** : shake, pulse, bounce, wiggle, etc.
+- **Chargement** : spin, skeleton, shimmer, progress, etc.
+- **Micro-interactions** : hover lifts, button press, toggle switch, etc.
+- **Scroll-based** : parallax, reveal on scroll, sticky behaviors
+
+#### 7.4 Variables d'animation
+- Custom properties liées (`--animation-*`, `--transition-*`, `--duration-*`, `--easing-*`)
+- Échelle de durées (fast, normal, slow)
+- Échelle d'easing functions
+
+---
+
+### 8. États et interactions
+- Styles :hover
+- Styles :focus / :focus-visible
+- Styles :active
+- Styles :disabled
+- Styles de sélection (::selection)
+- Styles :checked, :indeterminate
+- Styles :valid, :invalid
+- Styles :placeholder-shown
+
+---
+
+### 9. Tokens &amp; Variables
+- Liste complète des CSS custom properties
+- Patterns de nommage identifiés
+- Valeurs par défaut
+- Organisation par catégorie (color, spacing, typography, animation, etc.)
+
+---
+
+## FORMAT DE SORTIE
+
+Structurer le design system sous forme de documentation claire avec :
+- Valeurs exactes extraites du code
+- Organisation par catégorie
+- Exemples de code CSS réutilisables
+- Tableau récapitulatif des tokens si applicable
+- Code des @keyframes complet et réutilisable
+
+Génère-moi un fichier DESIGN_SYSTEM.md + une config Tailwind prête à utiliser.
+
+---
+
+## CONTRAINTES
+
+- **NE PAS** extraire le contenu textuel, les labels, les libellés
+- **NE PAS** extraire les URLs d'images, logos, icônes spécifiques
+- **NE PAS** inclure les classes utilitaires liées au contenu
+- **SE CONCENTRER** uniquement sur les règles de style abstraites et réutilisables
+- **ÊTRE EXHAUSTIF** : ne rien omettre des patterns stylistiques présents</code></pre>
                 </div>
             </div>
 
