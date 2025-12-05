@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workflow Refonte Site WordPress + Claude Code</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        primary: '#6366f1',
+                        dark: '#0f172a',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        .gradient-text { background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .code-block { background: #1e293b; border-radius: 8px; overflow-x: auto; }
+        .code-block code { color: #e2e8f0; font-size: 14px; }
+        .phase-card { transition: all 0.3s; }
+        .phase-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .nav-link { position: relative; }
+        .nav-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px; background: #6366f1; transition: width 0.3s; }
+        .nav-link:hover::after { width: 100%; }
+        .copy-btn { opacity: 0; transition: opacity 0.2s; }
+        .code-block:hover .copy-btn { opacity: 1; }
+    </style>
+</head>
+<body class="bg-white text-gray-900 font-sans">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-lg z-50 border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="#" class="text-xl font-bold gradient-text">Workflow WP + Claude</a>
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#phases" class="nav-link text-gray-600 hover:text-gray-900">Phases</a>
+                <a href="#prompts" class="nav-link text-gray-600 hover:text-gray-900">Prompts</a>
+                <a href="#design-system" class="nav-link text-gray-600 hover:text-gray-900">Design System</a>
+                <a href="#cms-git" class="nav-link text-gray-600 hover:text-gray-900">CMS + Git</a>
+                <a href="#structure" class="nav-link text-gray-600 hover:text-gray-900">Structure</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="pt-32 pb-20 px-6">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="inline-block px-4 py-2 bg-indigo-50 text-indigo-600 rounded-full text-sm font-medium mb-6">
+                Workflow complet & réplicable
+            </div>
+            <h1 class="text-5xl md:text-6xl font-extrabold mb-6 leading-tight">
+                Refonte de site avec<br><span class="gradient-text">WordPress + Claude Code</span>
+            </h1>
+            <p class="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
+                Guide exhaustif pour transformer n'importe quel site en thème WordPress custom,
+                optimisé SEO, avec interface admin intuitive et CMS connecté via Git Actions.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#phases" class="px-8 py-4 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition">
+                    Voir le workflow
+                </a>
+                <a href="#prompts" class="px-8 py-4 bg-gray-100 text-gray-900 rounded-xl font-semibold hover:bg-gray-200 transition">
+                    Copier les prompts
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Overview -->
+    <section class="py-16 px-6 bg-gray-50">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid md:grid-cols-5 gap-4">
+                <div class="bg-white p-6 rounded-2xl text-center phase-card">
+                    <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center mx-auto mb-4 text-xl font-bold">1</div>
+                    <h3 class="font-semibold mb-1">Analyse</h3>
+                    <p class="text-sm text-gray-500">Scraping, audit SEO, concurrence</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl text-center phase-card">
+                    <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4 text-xl font-bold">2</div>
+                    <h3 class="font-semibold mb-1">Design</h3>
+                    <p class="text-sm text-gray-500">Design system, maquettes</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl text-center phase-card">
+                    <div class="w-12 h-12 bg-pink-100 text-pink-600 rounded-xl flex items-center justify-center mx-auto mb-4 text-xl font-bold">3</div>
+                    <h3 class="font-semibold mb-1">Dev</h3>
+                    <p class="text-sm text-gray-500">Thème WP, CPT, Admin</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl text-center phase-card">
+                    <div class="w-12 h-12 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center mx-auto mb-4 text-xl font-bold">4</div>
+                    <h3 class="font-semibold mb-1">Contenu</h3>
+                    <p class="text-sm text-gray-500">SEO, articles, images</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl text-center phase-card">
+                    <div class="w-12 h-12 bg-green-100 text-green-600 rounded-xl flex items-center justify-center mx-auto mb-4 text-xl font-bold">5</div>
+                    <h3 class="font-semibold mb-1">Deploy</h3>
+                    <p class="text-sm text-gray-500">Hébergement, CI/CD</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 1: Analyse -->
+    <section id="phases" class="py-20 px-6">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl font-bold mb-12">Phase 1 : Analyse & Scraping</h2>
+
+            <div class="space-y-8">
+                <!-- 1.1 Scraping -->
+                <div class="bg-gray-50 rounded-2xl p-8">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center gap-3">
+                        <span class="w-8 h-8 bg-indigo-600 text-white rounded-lg flex items-center justify-center text-sm">1.1</span>
+                        Scraper le site actuel
+                    </h3>
+                    <p class="text-gray-600 mb-4">Extraire tout le contenu existant pour ne rien perdre.</p>
+
+                    <div class="code-block p-4 relative">
+                        <button class="copy-btn absolute top-3 right-3 px-3 py-1 bg-gray-700 text-white text-xs rounded hover:bg-gray-600" onclick="copyCode(this)">Copier</button>
+                        <pre><code class="font-mono"># Prompt Claude Code :
+"Scrape le site https://exemple.com et extrais :
+- Toutes les pages et leur contenu texte
+- La structure du menu de navigation
+- Les images importantes (URLs)
+- Les coordonnées de contact
+- Les témoignages clients
+- Les services/produits listés
+- Les meta titles et descriptions
+
+Sauvegarde tout dans un dossier /scraping/ avec :
+- pages.json (contenu de chaque page)
+- menu.json (structure navigation)
+- images.json (liste des URLs)
+- contacts.json (coordonnées)
+- content.md (version markdown lisible)"</code></pre>
+                    </div>
+                </div>
+
+                <!-- 1.2 Audit SEO -->
+                <div class="bg-gray-50 rounded-2xl p-8">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center gap-3">
+                        <span class="w-8 h-8 bg-indigo-600 text-white rounded-lg flex items-center justify-center text-sm">1.2</span>
+                        Audit SEO complet
+                    </h3>
+
+                    <div class="code-block p-4 relative">
+                        <button class="copy-btn absolute top-3 right-3 px-3 py-1 bg-gray-700 text-white text-xs rounded hover:bg-gray-600" onclick="copyCode(this)">Copier</button>
+                        <pre><code class="font-mono"># Prompt Claude Code :
+"Analyse le SEO du site [URL] :
+
+TECHNIQUE :
+- Vitesse de chargement (Core Web Vitals)
+- Mobile-friendliness
+- Structure des URLs
+- Sitemap XML existant
+- Robots.txt
+- Certificat SSL
+- Erreurs 404
+
+ON-PAGE :
+- Meta titles (longueur, mots-clés)
+- Meta descriptions
+- Balises H1/H2/H3 (hiérarchie)
+- Densité de mots-clés
+- Maillage interne
+- Alt text des images
+- Données structurées (Schema.org)
+
+OFF-PAGE :
+- Backlinks (nombre, qualité)
+- Présence réseaux sociaux
+- Google My Business
+
+Génère un rapport avec scores /100 et recommandations."</code></pre>
+                    </div>
+                </div>
+
+                <!-- 1.3 Analyse concurrence -->
+                <div class="bg-gray-50 rounded-2xl p-8">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center gap-3">
+                        <span class="w-8 h-8 bg-indigo-600 text-white rounded-lg flex items-center justify-center text-sm">1.3</span>
+                        Analyse de la concurrence
+                    </h3>
+
+                    <div class="code-block p-4 relative">
+                        <button class="copy-btn absolute top-3 right-3 px-3 py-1 bg-gray-700 text-white text-xs rounded hover:bg-gray-600" onclick="copyCode(this)">Copier</button>
+                        <pre><code class="font-mono"># Prompt Claude Code :
+"Recherche les 5 principaux concurrents de [entreprise]
+dans le secteur [secteur] en France.
+
+Pour chaque concurrent, analyse :
+
+SITE WEB :
+- Design et UX (moderne ? responsive ?)
+- Vitesse de chargement
+- Fonctionnalités clés
+- Parcours utilisateur
+
+CONTENU :
+- Types de pages
+- Blog (fréquence, sujets)
+- Ressources (guides, ebooks)
+- Témoignages, études de cas
+
+SEO :
+- Mots-clés positionnés (top 10)
+- Trafic estimé (SimilarWeb)
+- Stratégie de contenu
+- Backlinks notables
+
+DIFFÉRENCIATION :
+- Proposition de valeur unique
+- Points forts vs points faibles
+- Opportunités à exploiter
+
+Génère un tableau comparatif."</code></pre>
+                    </div>
+                </div>
+
+                <!-- 1.4 Sitemap -->
+                <div class="bg-gray-50 rounded-2xl p-8">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center gap-3">
+                        <span class="w-8 h-8 bg-indigo-600 text-white rounded-lg flex items-center justify-center text-sm">1.4</span>
+                        Définir la nouvelle structure
+                    </h3>
+
+                    <div class="code-block p-4 relative">
+                        <button class="copy-btn absolute top-3 right-3 px-3 py-1 bg-gray-700 text-white text-xs rounded hover:bg-gray-600" onclick="copyCode(this)">Copier</button>
+                        <pre><code class="font-mono"># Fichier SITEMAP.md à créer :
+
+## Pages principales
+- Accueil (/)
+- Services (/services/)
+  - Service 1 (/services/nom-service/)
+  - Service 2 (/services/nom-service/)
+- À propos (/a-propos/)
+- Blog (/blog/)
+  - Article (/blog/titre-article/)
+- Contact (/contact/)
+
+## Pages légales
+- Mentions légales (/mentions-legales/)
+- CGV (/cgv/)
+- Politique de confidentialité (/confidentialite/)
+
+## Custom Post Types nécessaires
+- services (CPT)
+- temoignages (CPT)
+- equipe (CPT)
+- realisations (CPT) - si portfolio
+
+## Taxonomies
+- Catégories de services
+- Catégories de blog</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 2: Design System -->
+    <section id="design-system" class="py-20 px-6 bg-gray-50">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl font-bold mb-12">Phase 2 : Design System</h2>
+
+            <div class="space-y-8">
+                <!-- Prompt extraction design -->
+                <div class="bg-white rounded-2xl p-8 shadow-sm">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center gap-3">
+                        <span class="w-8 h-8 bg-purple-600 text-white rounded-lg flex items-center justify-center text-sm">2.1</span>
+                        Extraction de Design System depuis HTML/CSS
+                    </h3>
+                    <p class="text-gray-600 mb-4">Prompt exhaustif pour extraire un design system complet d'un site existant.</p>
+
+                    <div class="code-block p-4 relative max-h-[600px] overflow-y-auto">
+                        <button class="copy-btn absolute top-3 right-3 px-3 py-1 bg-gray-700 text-white text-xs rounded hover:bg-gray-600 sticky" onclick="copyCode(this)">Copier</button>
+                        <pre><code class="font-mono text-sm"># PROMPT : Extraction de Design System depuis HTML/CSS
+
+## OBJECTIF
+Extraire un système de design exhaustif, généralisé et
+réutilisable à partir des fichiers HTML et CSS fournis,
+en isolant exclusivement les règles stylistiques et
+structurelles.
+
+## ENTRÉE ATTENDUE
+Fichiers HTML et/ou CSS (code source, liens, ou contenu collé).
+
+## TÂCHE - Analyser et documenter :
+
+### 1. Palette de couleurs
+- Couleurs primaires, secondaires, accent
+- Couleurs de fond (backgrounds)
+- Couleurs de texte (primary, secondary, muted, disabled)
+- Couleurs d'état (success, warning, error, info)
+- Couleurs de bordure
+- Gradients éventuels
+- Variables CSS custom properties (--color-*)
+
+### 2. Typographie
+- Familles de polices (font-family) et fallbacks
+- Échelle typographique (font-size : h1→h6, body, caption)
+- Graisses (font-weight)
+- Hauteurs de ligne (line-height)
+- Espacement des lettres (letter-spacing)
+- Styles de texte (italique, uppercase, etc.)
+
+### 3. Espacement (Spacing)
+- Échelle de marges (margin)
+- Échelle de paddings
+- Gaps (flexbox/grid)
+- Variables ou patterns récurrents (multiples de 4px, 8px)
+
+### 4. Mise en page (Layout)
+- Système de grille (colonnes, gutters)
+- Conteneurs (max-width, padding latéral)
+- Breakpoints responsive
+- Règles Flexbox/Grid utilisées
+- Patterns de disposition (stack, cluster, sidebar)
+
+### 5. Composants UI
+- Boutons : variantes, tailles, états (hover, active, disabled)
+- Champs de formulaire : inputs, selects, textareas
+- Cartes : structure, padding, ombres
+- Modales/Dialogs
+- Navigation : navbar, sidebar, tabs, breadcrumbs
+- Tableaux : styles de lignes, headers, bordures
+- Badges, tags, chips
+- Alertes/Notifications
+- Tooltips, popovers
+
+### 6. Effets visuels statiques
+- Border-radius (échelle : sm, md, lg, full)
+- Box-shadows (échelle : sm, md, lg, xl)
+- Opacités
+- Filtres (blur, backdrop-filter)
+- Outlines
+- Text-shadows
+
+### 7. Animations & Transitions
+
+#### 7.1 Transitions
+- Propriétés animées (transform, opacity, color, background)
+- Durées (transition-duration)
+- Fonctions de timing (ease, ease-in-out, cubic-bezier)
+- Délais (transition-delay)
+- Patterns récurrents par composant
+
+#### 7.2 Keyframes Animations
+- Noms des animations (@keyframes)
+- Étapes clés (0%, 50%, 100%, from, to)
+- Propriétés animées à chaque étape
+- Durée (animation-duration)
+- Fonction de timing
+- Nombre d'itérations
+- Direction (normal, reverse, alternate)
+- Mode de remplissage (forwards, backwards, both)
+
+#### 7.3 Types d'animations identifiées
+- Entrées : fade-in, slide-in, scale-in
+- Sorties : fade-out, slide-out, scale-out
+- Attention/Feedback : shake, pulse, bounce, wiggle
+- Chargement : spin, skeleton, shimmer, progress
+- Micro-interactions : hover lifts, button press
+- Scroll-based : parallax, reveal on scroll
+
+### 8. États et interactions
+- Styles :hover
+- Styles :focus / :focus-visible
+- Styles :active
+- Styles :disabled
+- Styles ::selection
+- Styles :checked, :indeterminate
+- Styles :valid, :invalid
+
+### 9. Tokens & Variables
+- Liste complète des CSS custom properties
+- Patterns de nommage identifiés
+- Organisation par catégorie
+
+## FORMAT DE SORTIE
+- Valeurs exactes extraites du code
+- Organisation par catégorie
+- Exemples de code CSS réutilisables
+- Tableau récapitulatif des tokens
+- Code des @keyframes complet
+
+## CONTRAINTES
+- NE PAS extraire le contenu textuel, labels, libellés
+- NE PAS extraire les URLs d'images, logos spécifiques
+- NE PAS inclure les classes utilitaires liées au contenu
+- SE CONCENTRER sur les règles de style abstraites
+- ÊTRE EXHAUSTIF : ne rien omettre</code></pre>
+                    </div>
+                </div>
+
+                <!-- Template Design System -->
+                <div class="bg-white rounded-2xl p-8 shadow-sm">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center gap-3">
+                        <span class="w-8 h-8 bg-purple-600 text-white rounded-lg flex items-center justify-center text-sm">2.2</span>
+                        Template DESIGN_SYSTEM.md
+                    </h3>
+
+                    <div class="code-block p-4 relative">
+                        <button class="copy-btn absolute top-3 right-3 px-3 py-1 bg-gray-700 text-white text-xs rounded hover:bg-gray-600" onclick="copyCode(this)">Copier</button>
+                        <pre><code class="font-mono text-sm"># Design System - [Nom du projet]
+
+## 1. Couleurs
+
+### Palette principale
+| Token | Valeur | Usage |
+|-------|--------|-------|
+| --color-primary | #6366f1 | Boutons, liens, accents |
+| --color-primary-dark | #4f46e5 | Hover states |
+| --color-secondary | #ec4899 | Accents secondaires |
+| --color-background | #ffffff | Fond de page |
+| --color-surface | #f8fafc | Cartes, sections |
+| --color-text | #1e293b | Texte principal |
+| --color-text-muted | #64748b | Texte secondaire |
+| --color-border | #e2e8f0 | Bordures |
+
+### États
+| Token | Valeur | Usage |
+|-------|--------|-------|
+| --color-success | #10b981 | Confirmations |
+| --color-warning | #f59e0b | Alertes |
+| --color-error | #ef4444 | Erreurs |
+| --color-info | #3b82f6 | Informations |
+
+## 2. Typographie
+
+### Polices
+```css
+--font-heading: 'Inter', sans-serif;
+--font-body: 'Inter', sans-serif;
+--font-mono: 'JetBrains Mono', monospace;
+```
+
+### Échelle
+| Token | Size | Line-height | Weight |
+|-------|------|-------------|--------|
+| --text-xs | 12px | 1.5 | 400 |
+| --text-sm | 14px | 1.5 | 400 |
+| --text-base | 16px | 1.6 | 400 |
+| --text-lg | 18px | 1.6 | 400 |
+| --text-xl | 20px | 1.4 | 600 |
+| --text-2xl | 24px | 1.3 | 600 |
+| --text-3xl | 30px | 1.2 | 700 |
+| --text-4xl | 36px | 1.2 | 700 |
+| --text-5xl | 48px | 1.1 | 800 |
+
+## 3. Espacement
+
+Base: 4px (0.25rem)
+
+| Token | Valeur |
+|-------|--------|
+| --space-1 | 4px |
+| --space-2 | 8px |
+| --space-3 | 12px |
+| --space-4 | 16px |
+| --space-5 | 20px |
+| --space-6 | 24px |
+| --space-8 | 32px |
+| --space-10 | 40px |
+| --space-12 | 48px |
+| --space-16 | 64px |
+| --space-20 | 80px |
+| --space-24 | 96px |
+
+## 4. Layout
+
+### Conteneurs
+```css
+--container-sm: 640px;
+--container-md: 768px;
+--container-lg: 1024px;
+--container-xl: 1280px;
+--container-2xl: 1536px;
+```
+
+### Breakpoints
+```css
+--breakpoint-sm: 640px;
+--breakpoint-md: 768px;
+--breakpoint-lg: 1024px;
+--breakpoint-xl: 1280px;
+```
+
+## 5. Effets
+
+### Border Radius
+| Token | Valeur |
+|-------|--------|
+| --radius-sm | 4px |
+| --radius-md | 8px |
+| --radius-lg | 12px |
+| --radius-xl | 16px |
+| --radius-2xl | 24px |
+| --radius-full | 9999px |
+
+### Shadows
+```css
+--shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+--shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+--shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+--shadow-xl: 0 20px 25px rgba(0,0,0,0.1);
+```
+
+## 6. Animations
+
+### Durées
+```css
+--duration-fast: 150ms;
+--duration-normal: 300ms;
+--duration-slow: 500ms;
+```
+
+### Easing
+```css
+--ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+--ease-out: cubic-bezier(0, 0, 0.2, 1);
+--ease-in: cubic-bezier(0.4, 0, 1, 1);
+```</code></pre>
+                    </div>
+                </div>
+
+                <!-- Tailwind Config -->
+                <div class="bg-white rounded-2xl p-8 shadow-sm">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center gap-3">
+                        <span class="w-8 h-8 bg-purple-600 text-white rounded-lg flex items-center justify-center text-sm">2.3</span>
+                        Configuration Tailwind
+                    </h3>
+
+                    <div class="code-block p-4 relative">
+                        <button class="copy-btn absolute top-3 right-3 px-3 py-1 bg-gray-700 text-white text-xs rounded hover:bg-gray-600" onclick="copyCode(this)">Copier</button>
+                        <pre><code class="font-mono text-sm">// tailwind.config.js
+module.exports = {
+  content: [
+    './**/*.php',
+    './src/**/*.js',
+  ],
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          DEFAULT: '#6366f1',
+          dark: '#4f46e5',
+          light: '#818cf8',
+        },
+        secondary: '#ec4899',
+      },
+      fontFamily: {
+        heading: ['Inter', 'sans-serif'],
+        body: ['Inter', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace'],
+      },
+      spacing: {
+        '18': '4.5rem',
+        '22': '5.5rem',
+      },
+      borderRadius: {
+        '4xl': '2rem',
+      },
+      animation: {
+        'fade-in': 'fadeIn 0.3s ease-out',
+        'slide-up': 'slideUp 0.4s ease-out',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        slideUp: {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+      },
+    },
+  },
+  plugins: [],
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 3: Développement -->
+    <section class="py-20 px-6">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl font-bold mb-12">Phase 3 : Développement WordPress</h2>
+
+            <div class="space-y-8">
+                <!-- Structure thème -->
+                <div class="bg-gray-50 rounded-2xl p-8">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center gap-3">
+                        <span class="w-8 h-8 bg-pink-600 text-white rounded-lg flex items-center justify-center text-sm">3.1</span>
+                        Structure du thème WordPress
+                    </h3>
+
+                    <div class="code-block p-4 relative">
+                        <button class="copy-btn absolute top-3 right-3 px-3 py-1 bg-gray-700 text-white text-xs rounded hover:bg-gray-600" onclick="copyCode(this)">Copier</button>
+                        <pre><code class="font-mono text-sm">theme-name/
+├── assets/
+│   ├── css/
+│   │   └── main.css              # Tailwind compilé
+│   ├── js/
+│   │   └── main.js               # Scripts custom
+│   └── images/
+│       └── logo.svg
+├── inc/
+│   ├── setup.php                 # Theme setup (supports, menus)
+│   ├── enqueue.php               # Scripts & styles
+│   ├── cpt.php                   # Custom Post Types
+│   ├── taxonomies.php            # Taxonomies custom
+│   ├── acf.php                   # Champs ACF
+│   ├── helpers.php               # Fonctions utilitaires
+│   ├── seo.php                   # Meta tags, Schema.org
+│   ├── forms.php                 # Formulaires contact
+│   ├── sitemap.php               # Sitemap XML dynamique
+│   ├── admin-dashboard.php       # Interface admin unifiée
+│   ├── import-content.php        # Import de contenu
+│   └── rest-api.php              # API REST custom
+├── template-parts/
+│   ├── header/
+│   │   ├── navbar.php
+│   │   └── mobile-menu.php
+│   ├── footer/
+│   │   └── footer.php
+│   ├── components/
+│   │   ├── button.php
+│   │   ├── card.php
+│   │   └── testimonial.php
+│   └── sections/
+│       ├── hero.php
+│       ├── features.php
+│       └── cta.php
+├── templates/
+│   ├── page-accueil.php
+│   ├── page-contact.php
+│   └── page-services.php
+├── functions.php                 # Charge tous les includes
+├── style.css                     # Header du thème
+├── index.php
+├── single.php
+├── single-{cpt}.php              # Templates CPT
+├── archive.php
+├── archive-{cpt}.php
+├── 404.php
+├── package.json
+├── tailwind.config.js
+├── vite.config.js
+└── .gitignore</code></pre>
+                    </div>
+                </div>
+
+                <!-- Custom Post Types -->
+                <div class="bg-gray-50 rounded-2xl p-8">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center gap-3">
+                        <span class="w-8 h-8 bg-pink-600 text-white rounded-lg flex items-center justify-center text-sm">3.2</span>
+                        Custom Post Types - Template
+                    </h3>
+
+                    <div class="code-block p-4 relative">
+                        <button class="copy-btn absolute top-3 right-3 px-3 py-1 bg-gray-700 text-white text-xs rounded hover:bg-gray-600" onclick="copyCode(this)">Copier</button>
+                        <pre><code class="font-mono text-sm">&lt;?php
+// inc/cpt.php
+
+function register_custom_post_types() {
+
+    // Services / Formations
+    register_post_type('service', [
+        'labels' => [
+            'name' => 'Services',
+            'singular_name' => 'Service',
+            'add_new' => 'Ajouter',
+            'add_new_item' => 'Ajouter un service',
+            'edit_item' => 'Modifier le service',
+            'view_item' => 'Voir le service',
+            'all_items' => 'Tous les services',
+            'search_items' => 'Rechercher',
+            'not_found' => 'Aucun service trouvé',
+        ],
+        'public' => true,
+        'has_archive' => true,
+        'show_in_rest' => true,
+        'supports' => ['title', 'editor', 'thumbnail', 'excerpt'],
+        'menu_icon' => 'dashicons-portfolio',
+        'rewrite' => ['slug' => 'services'],
+    ]);
+
+    // Témoignages
+    register_post_type('temoignage', [
+        'labels' => [
+            'name' => 'Témoignages',
+            'singular_name' => 'Témoignage',
+        ],
+        'public' => true,
+        'has_archive' => false,
+        'show_in_rest' => true,
+        'supports' => ['title', 'editor'],
+        'menu_icon' => 'dashicons-format-quote',
+    ]);
+
+    // Équipe
+    register_post_type('membre_equipe', [
+        'labels' => [
+            'name' => 'Équipe',
+            'singular_name' => 'Membre',
+        ],
+        'public' => true,
+        'has_archive' => false,
+        'show_in_rest' => true,
+        'supports' => ['title', 'editor', 'thumbnail'],
+        'menu_icon' => 'dashicons-groups',
+    ]);
+}
+add_action('init', 'register_custom_post_types');</code></pre>
+                    </div>
+                </div>
+
+                <!-- Admin Dashboard -->
+                <div class="bg-gray-50 rounded-2xl p-8">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center gap-3">
+                        <span class="w-8 h-8 bg-pink-600 text-white rounded-lg flex items-center justify-center text-sm">3.3</span>
+                        Interface Admin Unifiée
+                    </h3>
+                    <p class="text-gray-600 mb-4">Créer un dashboard custom pour que le client gère tout depuis un seul endroit.</p>
+
+                    <div class="code-block p-4 relative">
+                        <button class="copy-btn absolute top-3 right-3 px-3 py-1 bg-gray-700 text-white text-xs rounded hover:bg-gray-600" onclick="copyCode(this)">Copier</button>
+                        <pre><code class="font-mono text-sm"># Prompt Claude Code :
+"Crée une interface admin WordPress unifiée avec :
+
+MENU PRINCIPAL (position 3) :
+- Tableau de bord (stats, progression)
+- Contenu (onglets : Services, Équipe, Témoignages, Images)
+- Articles SEO
+- Contacts & Newsletter
+
+FONCTIONNALITÉS :
+- Cards avec statistiques (compteurs)
+- Tableaux listant le contenu existant
+- Boutons d'import/export
+- Onglets pour organiser les sections
+- Alertes de succès/erreur
+- Export CSV newsletter
+
+STYLE :
+- Design moderne avec cards et shadows
+- Couleurs cohérentes avec la marque
+- Responsive
+
+Supprime les anciens menus éparpillés (Outils > ...)
+pour tout centraliser."</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 4: CMS + Git Actions -->
+    <section id="cms-git" class="py-20 px-6 bg-gradient-to-br from-indigo-50 to-purple-50">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl font-bold mb-4">CMS Dynamique via Git Actions</h2>
+            <p class="text-gray-600 mb-12">Connecter WordPress à GitHub pour automatiser les déploiements et permettre l'édition via Claude Code.</p>
+
+            <div class="space-y-8">
+                <!-- Architecture -->
+                <div class="bg-white rounded-2xl p-8 shadow-sm">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center gap-3">
+                        <span class="w-8 h-8 bg-indigo-600 text-white rounded-lg flex items-center justify-center text-sm">1</span>
+                        Architecture CMS + Git
+                    </h3>
+
+                    <div class="bg-gray-100 rounded-xl p-6 font-mono text-sm mb-4">
+<pre>┌─────────────────────────────────────────────────────────────────┐
+│                        WORKFLOW                                   │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│   ┌──────────┐    push     ┌──────────┐    deploy   ┌─────────┐ │
+│   │  Claude  │ ──────────► │  GitHub  │ ──────────► │ Serveur │ │
+│   │   Code   │             │  Actions │             │   WP    │ │
+│   └──────────┘             └──────────┘             └─────────┘ │
+│        │                        │                        │       │
+│        │                        │                        │       │
+│   Édite les                Vérifie PHP            Reçoit les     │
+│   fichiers PHP             Build assets           fichiers       │
+│   directement              Déploie FTP/SSH        mis à jour     │
+│                                                                   │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│   CONTENU DYNAMIQUE (via REST API ou fichiers JSON)              │
+│                                                                   │
+│   ┌──────────┐             ┌──────────┐             ┌─────────┐ │
+│   │  Admin   │  wp-admin   │  WP DB   │   sync      │  JSON   │ │
+│   │  Client  │ ──────────► │  MySQL   │ ◄─────────► │  files  │ │
+│   └──────────┘             └──────────┘             └─────────┘ │
+│                                                          │       │
+│                                              commit + push       │
+│                                                          ▼       │
+│                                                    ┌─────────┐  │
+│                                                    │  GitHub │  │
+│                                                    └─────────┘  │
+│                                                                   │
+└─────────────────────────────────────────────────────────────────┘</pre>
+                    </div>
+                </div>
+
+                <!-- GitHub Actions -->
+                <div class="bg-white rounded-2xl p-8 shadow-sm">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center gap-3">
+                        <span class="w-8 h-8 bg-indigo-600 text-white rounded-lg flex items-center justify-center text-sm">2</span>
+                        GitHub Actions - Deploy WordPress
+                    </h3>
+
+                    <div class="code-block p-4 relative">
+                        <button class="copy-btn absolute top-3 right-3 px-3 py-1 bg-gray-700 text-white text-xs rounded hover:bg-gray-600" onclick="copyCode(this)">Copier</button>
+                        <pre><code class="font-mono text-sm"># .github/workflows/deploy.yml
+
+name: Deploy WordPress Theme
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build assets
+        run: npm run build
+
+      - name: Verify PHP syntax
+        run: |
+          for f in $(find . -name "*.php"); do
+            php -l "$f"
+          done
+
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./
+          server-dir: /www/wp-content/themes/theme-name/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            .env
+            package*.json
+            vite.config.js
+            tailwind.config.js
+            postcss.config.js
+
+      - name: Notify success
+        run: echo "✅ Theme deployed successfully!"</code></pre>
+                    </div>
+                </div>
+
+                <!-- Sync content -->
+                <div class="bg-white rounded-2xl p-8 shadow-sm">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center gap-3">
+                        <span class="w-8 h-8 bg-indigo-600 text-white rounded-lg flex items-center justify-center text-sm">3</span>
+                        Sync Contenu WP → GitHub
+                    </h3>
+                    <p class="text-gray-600 mb-4">Exporter le contenu WordPress en JSON pour versionner dans Git.</p>
+
+                    <div class="code-block p-4 relative">
+                        <button class="copy-btn absolute top-3 right-3 px-3 py-1 bg-gray-700 text-white text-xs rounded hover:bg-gray-600" onclick="copyCode(this)">Copier</button>
+                        <pre><code class="font-mono text-sm">&lt;?php
+// inc/export-content.php
+
+/**
+ * Exporte tout le contenu en JSON pour sync Git
+ */
+function export_content_to_json() {
+    $export_dir = URTAM_DIR . '/content-sync/';
+
+    if (!file_exists($export_dir)) {
+        mkdir($export_dir, 0755, true);
+    }
+
+    // Exporter chaque CPT
+    $post_types = ['service', 'temoignage', 'membre_equipe', 'post', 'page'];
+
+    foreach ($post_types as $post_type) {
+        $posts = get_posts([
+            'post_type' => $post_type,
+            'numberposts' => -1,
+            'post_status' => 'publish',
+        ]);
+
+        $data = [];
+        foreach ($posts as $post) {
+            $data[] = [
+                'id' => $post->ID,
+                'title' => $post->post_title,
+                'slug' => $post->post_name,
+                'content' => $post->post_content,
+                'excerpt' => $post->post_excerpt,
+                'date' => $post->post_date,
+                'meta' => get_post_meta($post->ID),
+                'thumbnail' => get_the_post_thumbnail_url($post->ID, 'full'),
+            ];
+        }
+
+        file_put_contents(
+            $export_dir . $post_type . '.json',
+            json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+        );
+    }
+
+    return true;
+}
+
+// Hook sur save_post pour auto-sync
+add_action('save_post', function($post_id) {
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+    export_content_to_json();
+}, 10, 1);
+
+// Bouton manuel dans admin
+add_action('admin_post_export_content_git', function() {
+    export_content_to_json();
+
+    // Optionnel: commit + push automatique
+    $output = shell_exec('cd ' . URTAM_DIR . ' && git add content-sync/ && git commit -m "Auto-sync content" && git push 2>&1');
+
+    wp_redirect(admin_url('admin.php?page=dashboard&exported=1'));
+    exit;
+});</code></pre>
+                    </div>
+                </div>
+
+                <!-- Édition via Claude -->
+                <div class="bg-white rounded-2xl p-8 shadow-sm">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center gap-3">
+                        <span class="w-8 h-8 bg-indigo-600 text-white rounded-lg flex items-center justify-center text-sm">4</span>
+                        Éditer le contenu via Claude Code
+                    </h3>
+
+                    <div class="code-block p-4 relative">
+                        <button class="copy-btn absolute top-3 right-3 px-3 py-1 bg-gray-700 text-white text-xs rounded hover:bg-gray-600" onclick="copyCode(this)">Copier</button>
+                        <pre><code class="font-mono text-sm"># Prompt Claude Code :
+"Modifie le contenu du site :
+
+1. Lis le fichier content-sync/service.json
+2. Modifie le service 'Leadership' :
+   - Nouveau titre: 'Leadership & Management 2025'
+   - Ajoute ce paragraphe à la description: [...]
+3. Sauvegarde le fichier
+4. Commit et push les changements
+
+Le GitHub Action va automatiquement
+redéployer le site."
+
+# Ou pour ajouter du contenu :
+"Ajoute un nouveau témoignage dans content-sync/temoignage.json :
+- Auteur: Marie Dupont
+- Entreprise: Tech Corp
+- Texte: [...]
+- Note: 5 étoiles
+
+Commit et push."</code></pre>
+                    </div>
+                </div>
+
+                <!-- Import JSON vers WP -->
+                <div class="bg-white rounded-2xl p-8 shadow-sm">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center gap-3">
+                        <span class="w-8 h-8 bg-indigo-600 text-white rounded-lg flex items-center justify-center text-sm">5</span>
+                        Import JSON → WordPress (bidirectionnel)
+                    </h3>
+
+                    <div class="code-block p-4 relative">
+                        <button class="copy-btn absolute top-3 right-3 px-3 py-1 bg-gray-700 text-white text-xs rounded hover:bg-gray-600" onclick="copyCode(this)">Copier</button>
+                        <pre><code class="font-mono text-sm">&lt;?php
+// inc/import-from-json.php
+
+/**
+ * Importe le contenu depuis les fichiers JSON
+ * (après un git pull ou deploy)
+ */
+function import_content_from_json() {
+    $import_dir = URTAM_DIR . '/content-sync/';
+    $post_types = ['service', 'temoignage', 'membre_equipe'];
+
+    foreach ($post_types as $post_type) {
+        $file = $import_dir . $post_type . '.json';
+        if (!file_exists($file)) continue;
+
+        $data = json_decode(file_get_contents($file), true);
+
+        foreach ($data as $item) {
+            // Chercher si existe déjà (par slug)
+            $existing = get_page_by_path($item['slug'], OBJECT, $post_type);
+
+            $post_data = [
+                'post_title' => $item['title'],
+                'post_name' => $item['slug'],
+                'post_content' => $item['content'],
+                'post_excerpt' => $item['excerpt'] ?? '',
+                'post_type' => $post_type,
+                'post_status' => 'publish',
+            ];
+
+            if ($existing) {
+                $post_data['ID'] = $existing->ID;
+                wp_update_post($post_data);
+            } else {
+                $post_id = wp_insert_post($post_data);
+            }
+
+            // Mettre à jour les meta
+            if (!empty($item['meta'])) {
+                foreach ($item['meta'] as $key => $value) {
+                    update_post_meta(
+                        $existing ? $existing->ID : $post_id,
+                        $key,
+                        is_array($value) ? $value[0] : $value
+                    );
+                }
+            }
+        }
+    }
+
+    return true;
+}
+
+// Hook après git pull (via webhook ou cron)
+add_action('wp_loaded', function() {
+    if (isset($_GET['sync_from_git']) && current_user_can('manage_options')) {
+        shell_exec('cd ' . URTAM_DIR . ' && git pull');
+        import_content_from_json();
+        wp_redirect(admin_url('admin.php?page=dashboard&synced=1'));
+        exit;
+    }
+});</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 5: SEO -->
+    <section id="prompts" class="py-20 px-6">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl font-bold mb-12">Phase 4 : Contenu & SEO</h2>
+
+            <div class="space-y-8">
+                <!-- Recherche mots-clés -->
+                <div class="bg-gray-50 rounded-2xl p-8">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center gap-3">
+                        <span class="w-8 h-8 bg-orange-600 text-white rounded-lg flex items-center justify-center text-sm">4.1</span>
+                        Recherche de mots-clés
+                    </h3>
+
+                    <div class="code-block p-4 relative">
+                        <button class="copy-btn absolute top-3 right-3 px-3 py-1 bg-gray-700 text-white text-xs rounded hover:bg-gray-600" onclick="copyCode(this)">Copier</button>
+                        <pre><code class="font-mono text-sm"># Prompt Claude Code :
+"Recherche les tendances SEO 2025 pour le secteur [SECTEUR].
+
+MOTS-CLÉS :
+- 20 mots-clés principaux (volume, difficulté)
+- Mots-clés longue traîne
+- Questions fréquentes (pour FAQ)
+- Mots-clés locaux si pertinent
+
+ANALYSE SERP :
+- Qui ranke actuellement ?
+- Type de contenu qui fonctionne
+- Featured snippets à cibler
+- PAA (People Also Ask)
+
+OPPORTUNITÉS :
+- Gaps de contenu chez les concurrents
+- Sujets tendance
+- Saisonnalité
+
+Génère un fichier KEYWORDS.md avec tableau récapitulatif."</code></pre>
+                    </div>
+                </div>
+
+                <!-- Articles SEO -->
+                <div class="bg-gray-50 rounded-2xl p-8">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center gap-3">
+                        <span class="w-8 h-8 bg-orange-600 text-white rounded-lg flex items-center justify-center text-sm">4.2</span>
+                        Rédaction d'articles SEO (1500-2500 mots)
+                    </h3>
+
+                    <div class="code-block p-4 relative">
+                        <button class="copy-btn absolute top-3 right-3 px-3 py-1 bg-gray-700 text-white text-xs rounded hover:bg-gray-600" onclick="copyCode(this)">Copier</button>
+                        <pre><code class="font-mono text-sm"># Prompt Claude Code :
+"Rédige un article SEO de 2000+ mots sur le sujet :
+'[TITRE DE L'ARTICLE]'
+
+STRUCTURE :
+- Titre H1 optimisé avec mot-clé principal
+- Meta description (155 caractères max)
+- Introduction accrocheuse (200 mots)
+- 4-6 sections H2 avec sous-sections H3
+- Listes à puces et numérotées
+- Exemples concrets et données chiffrées
+- Conclusion avec CTA
+
+SEO :
+- Mot-clé principal : [MOT-CLÉ] (5-7 occurrences naturelles)
+- Mots-clés secondaires : [MOT1], [MOT2], [MOT3]
+- Liens internes vers : /services/, /contact/, /a-propos/
+- Suggestion d'image avec alt text
+
+TON :
+- Professionnel mais accessible
+- Orienté solution
+- Expertise du secteur [SECTEUR]
+
+Format de sortie : HTML prêt pour WordPress"</code></pre>
+                    </div>
+                </div>
+
+                <!-- Import articles -->
+                <div class="bg-gray-50 rounded-2xl p-8">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center gap-3">
+                        <span class="w-8 h-8 bg-orange-600 text-white rounded-lg flex items-center justify-center text-sm">4.3</span>
+                        Import automatisé des articles
+                    </h3>
+
+                    <div class="code-block p-4 relative">
+                        <button class="copy-btn absolute top-3 right-3 px-3 py-1 bg-gray-700 text-white text-xs rounded hover:bg-gray-600" onclick="copyCode(this)">Copier</button>
+                        <pre><code class="font-mono text-sm">&lt;?php
+// Structure d'un article pour import
+
+$article = [
+    'title' => 'Titre H1 optimisé SEO',
+    'slug' => 'url-optimisee-seo',
+    'excerpt' => 'Meta description de 155 caractères maximum pour Google.',
+    'categories' => ['management', 'leadership'],
+    'content' => '
+        &lt;p class="lead"&gt;Introduction accrocheuse...&lt;/p&gt;
+
+        &lt;h2&gt;Premier point majeur&lt;/h2&gt;
+        &lt;p&gt;Contenu détaillé...&lt;/p&gt;
+
+        &lt;h3&gt;Sous-point important&lt;/h3&gt;
+        &lt;ul&gt;
+            &lt;li&gt;Point 1&lt;/li&gt;
+            &lt;li&gt;Point 2&lt;/li&gt;
+        &lt;/ul&gt;
+
+        &lt;h2&gt;Deuxième point majeur&lt;/h2&gt;
+        &lt;p&gt;Avec &lt;a href="/services/"&gt;lien interne&lt;/a&gt;...&lt;/p&gt;
+
+        &lt;blockquote&gt;Citation ou stat importante&lt;/blockquote&gt;
+
+        &lt;h2&gt;Conclusion&lt;/h2&gt;
+        &lt;p&gt;Résumé et &lt;a href="/contact/"&gt;CTA vers contact&lt;/a&gt;.&lt;/p&gt;
+    ',
+];</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Structure fichiers -->
+    <section id="structure" class="py-20 px-6 bg-gray-50">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl font-bold mb-12">Phase 5 : Déploiement</h2>
+
+            <div class="space-y-8">
+                <!-- Checklist -->
+                <div class="bg-white rounded-2xl p-8 shadow-sm">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center gap-3">
+                        <span class="w-8 h-8 bg-green-600 text-white rounded-lg flex items-center justify-center text-sm">5.1</span>
+                        Checklist pré-lancement
+                    </h3>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-semibold mb-3">Technique</h4>
+                            <ul class="space-y-2 text-gray-600">
+                                <li class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4"> PHP syntax check</li>
+                                <li class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4"> CSS/JS minifiés</li>
+                                <li class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4"> Images optimisées (WebP)</li>
+                                <li class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4"> Cache configuré</li>
+                                <li class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4"> SSL activé (HTTPS)</li>
+                                <li class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4"> Redirections 301</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold mb-3">SEO</h4>
+                            <ul class="space-y-2 text-gray-600">
+                                <li class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4"> Google Search Console</li>
+                                <li class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4"> Google Analytics 4</li>
+                                <li class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4"> Sitemap XML soumis</li>
+                                <li class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4"> Robots.txt vérifié</li>
+                                <li class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4"> Meta tags complets</li>
+                                <li class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4"> Schema.org</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold mb-3">Contenu</h4>
+                            <ul class="space-y-2 text-gray-600">
+                                <li class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4"> Toutes les pages créées</li>
+                                <li class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4"> Formulaires testés</li>
+                                <li class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4"> Liens vérifiés (pas de 404)</li>
+                                <li class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4"> Images avec alt text</li>
+                                <li class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4"> Mentions légales</li>
+                                <li class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4"> RGPD / Cookies</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold mb-3">Admin</h4>
+                            <ul class="space-y-2 text-gray-600">
+                                <li class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4"> Compte client créé</li>
+                                <li class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4"> Documentation fournie</li>
+                                <li class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4"> Formation client</li>
+                                <li class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4"> Backups configurés</li>
+                                <li class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4"> Sécurité (Wordfence)</li>
+                                <li class="flex items-center gap-2"><input type="checkbox" class="w-4 h-4"> Mises à jour auto</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hébergement -->
+                <div class="bg-white rounded-2xl p-8 shadow-sm">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center gap-3">
+                        <span class="w-8 h-8 bg-green-600 text-white rounded-lg flex items-center justify-center text-sm">5.2</span>
+                        Hébergements recommandés
+                    </h3>
+
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="p-4 border rounded-xl">
+                            <h4 class="font-semibold">o2switch</h4>
+                            <p class="text-sm text-gray-600">France, illimité, ~7€/mois</p>
+                            <span class="text-xs text-green-600">Bon rapport qualité/prix</span>
+                        </div>
+                        <div class="p-4 border rounded-xl">
+                            <h4 class="font-semibold">OVH</h4>
+                            <p class="text-sm text-gray-600">France, fiable, ~5-15€/mois</p>
+                            <span class="text-xs text-blue-600">Grande entreprise</span>
+                        </div>
+                        <div class="p-4 border rounded-xl">
+                            <h4 class="font-semibold">Infomaniak</h4>
+                            <p class="text-sm text-gray-600">Suisse, écologique, ~7€/mois</p>
+                            <span class="text-xs text-green-600">Éco-responsable</span>
+                        </div>
+                        <div class="p-4 border rounded-xl">
+                            <h4 class="font-semibold">Kinsta / WPEngine</h4>
+                            <p class="text-sm text-gray-600">Premium, managé, 30-50€/mois</p>
+                            <span class="text-xs text-purple-600">Haute performance</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Récap commandes -->
+    <section class="py-20 px-6">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl font-bold mb-12">Récapitulatif des commandes Claude Code</h2>
+
+            <div class="overflow-x-auto">
+                <table class="w-full bg-white rounded-2xl overflow-hidden shadow-sm">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-4 text-left font-semibold">Phase</th>
+                            <th class="px-6 py-4 text-left font-semibold">Commande type</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y">
+                        <tr>
+                            <td class="px-6 py-4">Scraping</td>
+                            <td class="px-6 py-4 font-mono text-sm">"Scrape le site X et extrais le contenu dans /scraping/"</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4">Design</td>
+                            <td class="px-6 py-4 font-mono text-sm">"Analyse le design de X et crée un design system"</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4">Dev</td>
+                            <td class="px-6 py-4 font-mono text-sm">"Crée un template WordPress pour la page X avec..."</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4">CPT</td>
+                            <td class="px-6 py-4 font-mono text-sm">"Ajoute un CPT X avec les champs ACF Y, Z"</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4">SEO</td>
+                            <td class="px-6 py-4 font-mono text-sm">"Recherche les tendances SEO pour le secteur X"</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4">Articles</td>
+                            <td class="px-6 py-4 font-mono text-sm">"Rédige un article SEO de 2000 mots sur X"</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4">Admin</td>
+                            <td class="px-6 py-4 font-mono text-sm">"Crée une interface admin unifiée pour gérer le contenu"</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4">Git Sync</td>
+                            <td class="px-6 py-4 font-mono text-sm">"Modifie content-sync/X.json et push les changements"</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4">Deploy</td>
+                            <td class="px-6 py-4 font-mono text-sm">"Vérifie la syntaxe PHP et prépare pour production"</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Temps estimé -->
+    <section class="py-20 px-6 bg-gradient-to-br from-indigo-600 to-purple-600 text-white">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-3xl font-bold mb-8">Temps estimé par projet</h2>
+
+            <div class="grid md:grid-cols-5 gap-4 mb-12">
+                <div class="bg-white/10 backdrop-blur rounded-xl p-6">
+                    <div class="text-3xl font-bold">1-2j</div>
+                    <div class="text-sm opacity-80">Analyse</div>
+                </div>
+                <div class="bg-white/10 backdrop-blur rounded-xl p-6">
+                    <div class="text-3xl font-bold">1-2j</div>
+                    <div class="text-sm opacity-80">Design</div>
+                </div>
+                <div class="bg-white/10 backdrop-blur rounded-xl p-6">
+                    <div class="text-3xl font-bold">3-5j</div>
+                    <div class="text-sm opacity-80">Dev</div>
+                </div>
+                <div class="bg-white/10 backdrop-blur rounded-xl p-6">
+                    <div class="text-3xl font-bold">2-3j</div>
+                    <div class="text-sm opacity-80">Contenu</div>
+                </div>
+                <div class="bg-white/10 backdrop-blur rounded-xl p-6">
+                    <div class="text-3xl font-bold">1j</div>
+                    <div class="text-sm opacity-80">Deploy</div>
+                </div>
+            </div>
+
+            <p class="text-xl opacity-90 mb-4">
+                <strong>Total : 8-13 jours</strong> pour une refonte complète
+            </p>
+            <p class="opacity-80">
+                Avec Claude Code, réduction de 30-50% du temps grâce à l'automatisation
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 px-6 border-t">
+        <div class="max-w-4xl mx-auto text-center text-gray-500">
+            <p class="mb-2">Workflow créé pour le projet TARUM Formation</p>
+            <p class="text-sm">Décembre 2024 - Réplicable pour tout projet WordPress</p>
+        </div>
+    </footer>
+
+    <script>
+        function copyCode(btn) {
+            const code = btn.parentElement.querySelector('code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                btn.textContent = 'Copié !';
+                setTimeout(() => btn.textContent = 'Copier', 2000);
+            });
+        }
+    </script>
+</body>
+</html>
